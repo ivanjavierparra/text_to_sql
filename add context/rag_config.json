@@ -1,0 +1,15 @@
+{
+  "persist_dir": "./rag_sql_vs",
+  "embedding": {
+    "type": "ollama",
+    "model": "nomic-embed-text",
+    "base_url": "http://localhost:11434"
+  },
+  "fallback_embedding": {
+    "type": "huggingface",
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "search": {
+    "k": 4
+  }
+}

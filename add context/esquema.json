@@ -1,0 +1,42 @@
+{
+  "esquema": {
+    "clientes": {
+      "descripcion": "Información de los clientes del banco",
+      "columnas": {
+        "id_cliente": {"tipo": "INT", "clave": "PK"},
+        "nombre": {"tipo": "VARCHAR"},
+        "fecha_nacimiento": {"tipo": "DATE"},
+        "estado_cliente": {"tipo": "VARCHAR", "valores": ["activo","moroso","inactivo"]}
+      }
+    },
+    "prestamos": {
+      "descripcion": "Préstamos otorgados a clientes",
+      "columnas": {
+        "id_prestamo": {"tipo": "INT", "clave": "PK"},
+        "id_cliente": {"tipo": "INT", "clave": "FK", "referencia": "clientes.id_cliente"},
+        "monto": {"tipo": "DECIMAL"},
+        "fecha_aprobacion": {"tipo": "DATE"},
+        "estado_prestamo": {"tipo": "VARCHAR", "valores": ["aprobado","cancelado"]}
+      }
+    }
+  },
+  "ejemplos": [
+    {
+      "pregunta": "¿Cuál es el monto total de préstamos aprobados el mes pasado?",
+      "sql": "SELECT SUM(monto) FROM prestamos WHERE estado_prestamo='aprobado' AND fecha_aprobacion BETWEEN '2025-08-01' AND '2025-08-31';"
+    },
+    {
+      "pregunta": "Listar clientes activos con préstamos vigentes",
+      "sql": "SELECT c.id_cliente, c.nombre, p.id_prestamo, p.monto FROM clientes c JOIN prestamos p ON c.id_cliente = p.id_cliente WHERE c.estado_cliente='activo' AND p.estado_prestamo='aprobado';"
+    }
+  ],
+  "reglas_negocio": [
+    "Un cliente activo es aquel cuyo estado_cliente = 'activo'.",
+    "Se consideran préstamos vigentes solo los que tengan estado_prestamo = 'aprobado'.",
+    "Para métricas mensuales, siempre usar fecha_aprobacion y no otra columna de fecha."
+  ],
+  "notas_seguridad": [
+    "No exponer números de documento, contraseñas o datos de tarjetas.",
+    "Los resultados deben agregarse o anonimizarse si se van a mostrar a usuarios no técnicos."
+  ]
+}
